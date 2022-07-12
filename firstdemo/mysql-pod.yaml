@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    name: mysql
+spec:
+  containers:
+  - name: mysql-pod
+    image: bitnami/mysql:latest
+    env:
+      - name: ALLOW_EMPTY_PASSWORD
+        value: "yes"
+    securityContext:
+          privileged: true
+          allowPrivilegeEscalation: true
+    volumeMounts:
+      - mountPath: /bitnami/mysql/data/
+        name: mysql-data  
+        readOnly: true
+    # resources:
+    #   limits:
+    #     memory: "128Mi"
+    #     cpu: "500m"
+    ports:
+      - containerPort: 3306
+  volumes:
+    - name: mysql-data
+      hostPath:
+        path: /home/mysql-data
+        type: DirectoryOrCreate
+    

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  containers:
+  - image: nginx:1.7.9
+    name: test
+    volumeMounts:
+    - mountPath: /usr/share/nginx/html/index2.html
+      name: test-volume
+      readOnly: true
+  volumes:
+  - name: test-volume
+    hostPath:
+      path: /home/index.html
+      type: FileOrCreate
