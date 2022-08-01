@@ -14,19 +14,19 @@ spec:
     securityContext:
           privileged: true
           allowPrivilegeEscalation: true
-    volumeMounts:
-      - mountPath: /bitnami/mysql/data/
-        name: mysql-data  
-        readOnly: true
+    # volumeMounts:
+    #   - mountPath: /bitnami/mysql/data/
+    #     name: mysql-data  
+    #     readOnly: true
     # resources:
     #   limits:
     #     memory: "128Mi"
     #     cpu: "500m"
     ports:
       - containerPort: 3306
-  volumes:
-    - name: mysql-data
-      hostPath:
-        path: /home/mysql-data
-        type: DirectoryOrCreate
+  # volumes:
+  #   - name: mysql-data
+  #     hostPath:
+  #       path: /home/mysql-data
+  #       type: DirectoryOrCreate
     

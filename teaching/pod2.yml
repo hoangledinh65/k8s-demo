@@ -3,9 +3,18 @@ kind: Pod
 metadata:
   name: test2
   namespace: my-namespace
+  labels:
+    app: my-nginx
 spec:
   containers:
   - image: nginx:1.7.9
     name: test
-    ports: 
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "128Mi"
+      limits:
+        cpu: "1000m"
+        memory: 500Mi"
+    ports:
       - containerPort: 80
