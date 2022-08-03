@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: java
+  labels:
+    app: java
+    env: test
+    version: 1.0.1
+    component: be
+spec:
+  containers:
+  - name: myapp
+    image: openjdk:11
+    command:
+      - "/bin/sh"
+      - "-c"
+    args:
+      - "tail -f /dev/null"
+    ports:
+      - containerPort: 8080
