@@ -9,6 +9,13 @@ spec:
   containers:
   - name: ubuntu
     image: ubuntu:latest
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "128Mi"
+      limits:
+        cpu: "1000m"
+        memory: 500Mi"
     ports:
       - containerPort: 80
     command: ["/bin/bash", "-c"]

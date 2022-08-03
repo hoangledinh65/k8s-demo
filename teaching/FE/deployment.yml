@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dp
+  labels:
+    app: nginx-dp
+    tier: frontend-dp
+spec:
+  replicas: 10
+  revisionHistoryLimit: 14
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      tier: frontend-dp
+  template:
+    metadata:
+      labels:
+        tier: frontend-dp
+      annotations:
+        kubernetes.io/change-cause: "update"
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          readinessProbe:
+            periodSeconds: 15
+            successThreshold: 2
+            failureThreshold: 2
+            httpGet:
+              path: /heathy
+              port: 80
+          resources:
+            limits:
+              cpu: "200m"
+            requests:
+              cpu: "100m"
+          ports:
+            - containerPort: 80
