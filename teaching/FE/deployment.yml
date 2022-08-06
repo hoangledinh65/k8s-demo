@@ -6,30 +6,68 @@ metadata:
     app: nginx-dp
     tier: frontend-dp
 spec:
-  replicas: 10
+  replicas: 4
   revisionHistoryLimit: 14
   strategy:
     type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
-      tier: frontend-dp
+      app: nginx
   template:
     metadata:
       labels:
         tier: frontend-dp
+        app: nginx
       annotations:
         kubernetes.io/change-cause: "update"
     spec:
+      
       containers:
         - name: nginx
           image: nginx
-          readinessProbe:
-            periodSeconds: 15
-            successThreshold: 2
-            failureThreshold: 2
+          imagePullPolicy: Always
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "hostname > /usr/share/nginx/html/index.html"]
+          # args:
+          #   - "/bin/sh"
+          #   - "-c"
+          #   - "hostname > /usr/share/nginx/html/index.html"
+          #   - "&& "
+          
+          # env:
+          #   - name: nginxenv
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         key: name
+          #         name: nginx
+          
+          livenessProbe:
             httpGet:
-              path: /heathy
+              path: /index.html
               port: 80
+            initialDelaySeconds: 15
+            failureThreshold: 5
+            periodSeconds: 10
+            successThreshold: 1
+          readinessProbe:
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 5
+            failureThreshold: 5
+            httpGet:
+              path: /index.html
+              port: 80
+          startupProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+            failureThreshold: 2
+            periodSeconds: 5
           resources:
             limits:
               cpu: "200m"
@@ -37,3 +75,17 @@ spec:
               cpu: "100m"
           ports:
             - containerPort: 80
+          volumeMounts:
+            - mountPath: /home/config
+              name: myvolume
+            - mountPath: /home/app
+              name: app
+      volumes:
+        - name: myvolume
+          configMap:
+            name: nginx
+        - name: app
+          configMap:
+            name: foo
+
+          
