@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: mysql
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: mysql
@@ -22,10 +23,3 @@ spec:
         ports:
         - containerPort: 3306
           name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pv-claim
