@@ -16,6 +16,8 @@ spec:
       labels:
         app: nginx
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: ip-192-168-49-73.ap-southeast-1.compute.internal
       containers:
       - name: nginx
         image: nginx:1.14.2
@@ -36,5 +38,5 @@ spec:
             mountPath: /data/hoangdl-emptydir
       volumes:
         - name: hoangdl-emptydir
-          hostPath:
-            path: /home/hoangdl-hostpath
+          awsElasticBlockStore:
+            volumeID: vol-072e4d15d5910ccc4
