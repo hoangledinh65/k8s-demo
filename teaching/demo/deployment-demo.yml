@@ -38,5 +38,5 @@ spec:
             mountPath: /data/hoangdl-emptydir
       volumes:
         - name: hoangdl-emptydir
-          awsElasticBlockStore:
-            volumeID: vol-072e4d15d5910ccc4
+          persistentVolumeClaim:
+            claimName: hoangdl-pvc
