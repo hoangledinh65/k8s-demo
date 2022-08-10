@@ -6,12 +6,12 @@ metadata:
     app: nginx-dp
     tier: frontend-dp
 spec:
-  replicas: 4
+  replicas: 1
   revisionHistoryLimit: 14
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: 3
       maxUnavailable: 0
   selector:
     matchLabels:
@@ -24,21 +24,16 @@ spec:
       annotations:
         kubernetes.io/change-cause: "update"
     spec:
-      
+      nodeSelector:
+        kubernetes.io/hostname: ip-192-168-26-113.ap-southeast-1.compute.internal
       containers:
         - name: nginx
           image: nginx
           imagePullPolicy: Always
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "hostname > /usr/share/nginx/html/index.html"]
-          # args:
-          #   - "/bin/sh"
-          #   - "-c"
-          #   - "hostname > /usr/share/nginx/html/index.html"
-          #   - "&& "
-          
+          # lifecycle:
+          #   postStart:
+          #     exec:
+          #       command: ["/bin/sh", "-c", "hostname > /usr/share/nginx/html/index.html"]
           # env:
           #   - name: nginxenv
           #     valueFrom:
@@ -46,46 +41,56 @@ spec:
           #         key: name
           #         name: nginx
           
-          livenessProbe:
-            httpGet:
-              path: /index.html
-              port: 80
-            initialDelaySeconds: 15
-            failureThreshold: 5
-            periodSeconds: 10
-            successThreshold: 1
-          readinessProbe:
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            successThreshold: 5
-            failureThreshold: 5
-            httpGet:
-              path: /index.html
-              port: 80
-          startupProbe:
-            httpGet:
-              path: /index.html
-              port: 80
-            failureThreshold: 2
-            periodSeconds: 5
-          resources:
-            limits:
-              cpu: "200m"
-            requests:
-              cpu: "100m"
+          # livenessProbe:
+          #   httpGet:
+          #     path: /index.html
+          #     port: 80
+          #   initialDelaySeconds: 15
+          #   failureThreshold: 5
+          #   periodSeconds: 5
+          #   successThreshold: 1
+          # readinessProbe:
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 5
+          #   successThreshold: 2
+          #   failureThreshold: 2
+          #   httpGet:
+          #     path: /index.html
+          #     port: 80
+          # resources:
+          #   limits:
+          #     cpu: "200m"
+          #   requests:
+          #     cpu: "100m"
           ports:
             - containerPort: 80
           volumeMounts:
-            - mountPath: /home/config
+            - mountPath: /usr/share/nginx/html
               name: myvolume
-            - mountPath: /home/app
-              name: app
+            - mountPath: /home/emptyDirDemo
+              name: emptydemo
+        - name: alpine
+          image: alpine
+          command:
+            - "/bin/sh"
+            - "-c"
+          args:
+            - "tail -f /dev/null"
+          volumeMounts:
+            - mountPath: /home/mount
+              name: myvolume
+            - mountPath: /home/aws-ebs
+              name: aws-ebs
       volumes:
         - name: myvolume
-          configMap:
-            name: nginx
-        - name: app
-          configMap:
-            name: foo
+          hostPath:
+            path: /home
+        - name: emptydemo
+          emptyDir: {}
+        - name: aws-ebs
+          persistentVolumeClaim:
+            claimName: hoangdl-pvc
+            
+            
 
           

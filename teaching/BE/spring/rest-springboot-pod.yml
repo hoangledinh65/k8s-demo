@@ -3,13 +3,16 @@ kind: Pod
 metadata:
   name: myapp
   labels:
-    name: java
+    app: java
     env: test
 spec:
   containers:
   - name: java
-    image: hoangledinh65/rest-springboot:latest
+    image: hoangledinh65/rest-springboot
     ports:
       - containerPort: 8080
+    envFrom:
+      - configMapRef:
+          name: java
   imagePullSecrets:
   - name: regcred

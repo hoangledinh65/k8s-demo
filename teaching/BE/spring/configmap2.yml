@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: java-cfg2
+data:
+  name: Dinh Le Hoang
+  age: "25"
+  file1: |
+    Day la file thu nhat
+    cua Dinh Le Hoang
+  
+  file2: |
+    Day la file thu 2
+    cua Dinh Le Hoang

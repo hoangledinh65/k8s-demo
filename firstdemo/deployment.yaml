@@ -23,7 +23,6 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: mysql-data
-
       volumes:
         - name: mysql-data
           hostPath:

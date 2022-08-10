@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
+  
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -14,12 +15,34 @@ spec:
       labels:
         app: mysql
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: ip-192-168-49-73.ap-southeast-1.compute.internal
       containers:
       - image: mysql:5.6
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: password
+          valueFrom:
+            secretKeyRef:
+              key: MYSQL_ROOT_PASSWORD
+              name: mysql
         ports:
         - containerPort: 3306
-          name: mysql
+          name: mysq
+        volumeMounts:
+          - name: hoangdl-db
+            mountPath: /var/lib/mysql
+          - name: hoangdl-home
+            mountPath: /home
+          - name: hoangdl-sc
+            mountPath: /home/db
+      volumes:
+        - name: hoangdl-db
+          awsElasticBlockStore:
+            volumeID: vol-0c29e6f557cb09fb3
+        - name: hoangdl-home
+          persistentVolumeClaim:
+            claimName: mypvc
+        - name: hoangdl-sc
+          persistentVolumeClaim:
+            claimName: mypvc2
