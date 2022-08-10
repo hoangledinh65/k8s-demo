@@ -5,8 +5,7 @@ metadata:
   annotations:
     kubernetes.io/change-cause: first change
 spec:
-  revisionHistoryLimit: 3
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
   selector:
@@ -16,33 +15,25 @@ spec:
     metadata:
       labels:
         app: nginx
-        track: stable
     spec:
       containers:
       - name: nginx
-        livenessProbe:
-          httpGet:
-            path: /index.html
-            port: 80
-          initialDelaySeconds: 15
-          failureThreshold: 5
-          periodSeconds: 10
-          successThreshold: 1
-        readinessProbe:
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          successThreshold: 5
-          failureThreshold: 5
-          exec:
-            command:
-              - "/bin/sh"
-              - "-c"
-              - "cat /usr/share/nginx/html/index.html" 
         image: nginx:1.14.2
-        env:
-          - name: abc
-            value: "123"
-          - name: abcde
-            value: "@34"
         ports:
         - containerPort: 80
+        volumeMounts:
+          - name: hoangdl-emptydir
+            mountPath: /home/hoangdl-emptydir
+      - name: alpine
+        image: alpine
+        command:
+          - "/bin/sh"
+          - "-c"
+        args:
+          - "tail -f /dev/null "
+        volumeMounts:
+          - name: hoangdl-emptydir
+            mountPath: /data/hoangdl-emptydir
+      volumes:
+        - name: hoangdl-emptydir
+          emptyDir: {}
