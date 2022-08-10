@@ -36,4 +36,5 @@ spec:
             mountPath: /data/hoangdl-emptydir
       volumes:
         - name: hoangdl-emptydir
-          emptyDir: {}
+          hostPath:
+            path: /home/hoangdl-hostpath
