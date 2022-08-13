@@ -9,18 +9,18 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  storageClassName: ""
-
---- 
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mypvc2
-spec:
-  resources:
-    requests:
-      storage: 5Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
   storageClassName: "hoangdl-sc"
+
+# --- 
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: mypvc2
+# spec:
+#   resources:
+#     requests:
+#       storage: 5Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: "hoangdl-sc"

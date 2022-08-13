@@ -6,7 +6,7 @@ metadata:
     app: nginx-dp
     tier: frontend-dp
 spec:
-  replicas: 1
+  replicas: 3
   revisionHistoryLimit: 14
   strategy:
     type: RollingUpdate
@@ -25,7 +25,7 @@ spec:
         kubernetes.io/change-cause: "update"
     spec:
       nodeSelector:
-        kubernetes.io/hostname: ip-192-168-26-113.ap-southeast-1.compute.internal
+        kubernetes.io/hostname: ip-192-168-2-36.ap-southeast-1.compute.internal
       containers:
         - name: nginx
           image: nginx
@@ -66,30 +66,28 @@ spec:
             - containerPort: 80
           volumeMounts:
             - mountPath: /usr/share/nginx/html
-              name: myvolume
-            - mountPath: /home/emptyDirDemo
-              name: emptydemo
+              name: aws-ebs
         - name: alpine
           image: alpine
           command:
             - "/bin/sh"
-            - "-c"
           args:
+            - "-c"
             - "tail -f /dev/null"
           volumeMounts:
-            - mountPath: /home/mount
-              name: myvolume
-            - mountPath: /home/aws-ebs
+            # - mountPath: /home/mount
+            #   name: myvolume
+            - mountPath: /usr/share/nginx
               name: aws-ebs
       volumes:
-        - name: myvolume
-          hostPath:
-            path: /home
-        - name: emptydemo
-          emptyDir: {}
+        # - name: myvolume
+        #   hostPath:
+        #     path: /home
+        # - name: emptydemo
+        #   emptyDir: {}
         - name: aws-ebs
           persistentVolumeClaim:
-            claimName: hoangdl-pvc
+            claimName: mypvc
             
             
 

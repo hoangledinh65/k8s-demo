@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: mysql
   labels:
-    name: myapp
+    app: mysql
     env: test
     version: 1.0.0
     component: db

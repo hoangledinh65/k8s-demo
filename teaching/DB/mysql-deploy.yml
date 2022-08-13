@@ -15,8 +15,8 @@ spec:
       labels:
         app: mysql
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: ip-192-168-49-73.ap-southeast-1.compute.internal
+      # nodeSelector:
+      #   kubernetes.io/hostname: ip-192-168-2-36.ap-southeast-1.compute.internal
       containers:
       - image: mysql:5.6
         name: mysql
@@ -32,17 +32,12 @@ spec:
         volumeMounts:
           - name: hoangdl-db
             mountPath: /var/lib/mysql
-          - name: hoangdl-home
-            mountPath: /home
-          - name: hoangdl-sc
-            mountPath: /home/db
+          # - name: hoangdl-sc
+          #   mountPath: /home/db
       volumes:
         - name: hoangdl-db
-          awsElasticBlockStore:
-            volumeID: vol-0c29e6f557cb09fb3
-        - name: hoangdl-home
           persistentVolumeClaim:
             claimName: mypvc
-        - name: hoangdl-sc
-          persistentVolumeClaim:
-            claimName: mypvc2
+        # - name: hoangdl-sc
+        #   persistentVolumeClaim:
+        #     claimName: mypvc2

@@ -5,8 +5,8 @@ metadata:
   labels:
     name: test
 spec:
-  nodeSelector:
-    kubernetes.io/hostname: minikube-m02
+  # nodeSelector:
+  #   kubernetes.io/hostname: minikube-m02
   containers:
   - name: test
     image: alpine:latest

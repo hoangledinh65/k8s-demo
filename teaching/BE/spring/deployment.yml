@@ -24,8 +24,8 @@ spec:
           - name: volume1
             mountPath: /etc/file1
             readOnly: true
-            # subPath: 
-            #   file1
+            subPath: 
+              file1
       imagePullSecrets:
       - name: regcred
       volumes:

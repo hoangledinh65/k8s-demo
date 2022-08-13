@@ -19,10 +19,21 @@ spec:
       containers:
         - name: nginx
           image: nginx
-          resources:
-            limits:
-              cpu: "200m"
-            requests:
-              cpu: "100m"
+          env:
+            - name: file1
+              valueFrom:
+                configMapKeyRef:
+                  name: myapp
+                  key: file1
           ports:
             - containerPort: 80
+          volumeMounts:
+            - mountPath: /hoangdl-data
+              name: hoangdl-configmap
+      volumes:
+        - name: hoangdl-configmap
+          configMap:
+            name: myapp
+            items:
+              - key: file1
+                path: file1

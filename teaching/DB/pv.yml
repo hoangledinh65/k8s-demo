@@ -9,4 +9,4 @@ spec:
     storage: 5Gi
   persistentVolumeReclaimPolicy: Delete
   awsElasticBlockStore:
-    volumeID: vol-0c425be6853e57d91
+    volumeID: vol-0b4b412e65f54abeb

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp
+data:
+  name: dinhlehoang
+  age: "26"
+  country: "VN"
+  file1 : |
+    klasdjflaksdjflaskdfj
+    asdf;alsjdflaskdjfl;as klasdjflaksdjflaskdfjasdf; ljas
+    a;sldjfaslkdjfa;sldkjfsadlk
