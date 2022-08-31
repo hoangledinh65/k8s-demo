@@ -13,6 +13,6 @@ nodeGroups:
   - name: ng-1
     instanceType: t2.medium
     desiredCapacity: 2
-    volumeSize: 100
+    volumeSize: 20
     ssh:
       publicKeyPath: ~/.ssh/ec2.pub

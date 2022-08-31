@@ -1,10 +1,22 @@
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   name: nginx
-# data:
-#   name: hoangdl2
-#   age: "202"
-#   file: |
-#     this is my file 35
-#     not anymore
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx
+data:
+  name: hoangdl2
+  age: "202"
+  config.conf: |
+    upstream backend {
+      server java-svc:8080;
+    }
+
+    # server { # simple load balancing
+    #   listen          80;
+    #   server_name     backend.com;
+    #   access_log      logs/big.server.access.log main;
+
+    #   location /all {
+    #     proxy_pass      http://backend/demo/all;
+    #   }
+    # }
+
