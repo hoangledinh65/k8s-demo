@@ -30,14 +30,13 @@ spec:
         - containerPort: 3306
           name: mysq
         volumeMounts:
+          # - name: empty-db
+          #   mountPath: /var/lib/mysql
           - name: hoangdl-db
-            mountPath: /var/lib/mysql
-          # - name: hoangdl-sc
-          #   mountPath: /home/db
+            mountPath: /home/db
       volumes:
         - name: hoangdl-db
           persistentVolumeClaim:
             claimName: mypvc
-        # - name: hoangdl-sc
-        #   persistentVolumeClaim:
-        #     claimName: mypvc2
+        # - name: empty-db
+        #   emptyDir: {}

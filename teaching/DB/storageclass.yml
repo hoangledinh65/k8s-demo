@@ -2,7 +2,8 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: hoangdl-sc
-provisioner: kubernetes.io/aws-ebs
+provisioner: pd.csi.storage.gke.io
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
 parameters:
-  fsType: ext4
-  # persistentVolumeClaim: Delete
+  type: pd-balanced
