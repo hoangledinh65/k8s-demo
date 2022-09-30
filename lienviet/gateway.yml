@@ -1,0 +1,176 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: lvb-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      # number: 15443
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+# ---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   name: root
+# spec:
+#   hosts:
+#   - "*"
+#   gateways: 
+#     - lvb-gateway
+#   http:
+#   - route:
+#     - destination:
+#         host: esb-gateway-service
+#         port:
+#           number: 18101
+    
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: auth
+spec:
+  hosts:
+  - "*"
+  gateways: 
+    - lvb-gateway
+  http:
+  - match:
+    - uri:
+        exact: "/esb-auth-service"
+    route:
+      - destination:
+          host: esb-auth-service
+          port:
+            number: 18201
+  - route:
+    - destination:
+        host: esb-auth-service
+        port:
+          number: 18201
+        
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: tct
+spec:
+  hosts:
+  - "*"
+  gateways: 
+    - lvb-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/tct-service"
+    rewrite:
+     uri: "/"
+    route:
+      - destination:
+          host: tct-service
+          port:
+            number: 19401
+  - route:
+    - destination:
+        host: tct-service
+        port:
+          number: 19401
+  
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: config
+spec:
+  hosts:
+  - "*"
+  gateways: 
+    - lvb-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/config-service"
+    rewrite:
+     uri: "/"
+    route:
+      - destination:
+          host: esb-config-service
+          port:
+            number: 18601
+  - route:
+    - destination:
+        host: esb-config-service
+        port:
+          number: 18601
+
+--- 
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpbin
+  namespace: foo
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - httpbin-gateway
+  http:
+  - route:
+    - destination:
+        port:
+          number: 8000
+        host: httpbin.foo.svc.cluster.local
+    
+--- 
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: httpbin-gateway
+  namespace: foo
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+
+
+--- 
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: "jwt-example"
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  jwtRules:
+  - issuer: "testing@secure.istio.io"
+    jwksUri: "https://raw.githubusercontent.com/istio/istio/release-1.15/security/tools/jwt/samples/jwks.json"
+
+--- 
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: "frontend-ingress"
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  action: DENY
+  rules:
+  - from:
+    - source:
+        notRequestPrincipals: ["*"]

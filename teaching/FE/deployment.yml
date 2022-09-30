@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-dp
+  name: frontend
   labels:
-    app: nginx-dp
-    tier: frontend-dp
+    app: nginx
+    tier: frontend
 spec:
-  replicas: 5
+  replicas: 2
   revisionHistoryLimit: 14
   strategy:
     type: RollingUpdate
@@ -19,74 +19,17 @@ spec:
   template:
     metadata:
       labels:
-        tier: frontend-dp
+        tier: frontend
         app: nginx
-      annotations:
-        kubernetes.io/change-cause: "update"
     spec:
       containers:
         - name: nginx
           image: nginx:1.14.2
           imagePullPolicy: Always
-          # lifecycle:
-          #   postStart:
-          #     exec:
-          #       command: ["/bin/sh", "-c", "hostname > /usr/share/nginx/html/index.html"]
-          # env:
-          #   - name: nginxenv
-          #     valueFrom:
-          #       configMapKeyRef:
-          #         key: name
-          #         name: nginx
-          
-          # livenessProbe:
-          #   httpGet:
-          #     path: /index.html
-          #     port: 80
-          #   initialDelaySeconds: 4
-          #   failureThreshold: 3
-          #   periodSeconds: 5
-          #   successThreshold: 1
-          # readinessProbe:
-          #   initialDelaySeconds: 5
-          #   periodSeconds: 5
-          #   successThreshold: 1
-          #   failureThreshold: 2
-          #   httpGet:
-          #     path: /index.html
-          #     port: 80
           resources:
             limits:
               cpu: "200m"
             requests:
-              cpu: "100m"
+              cpu: "150m"
           ports:
             - containerPort: 80
-          # volumeMounts:
-          #   - mountPath: /etc/nginx/conf.d/config.conf
-          #     subPath: config.conf
-          #     name: configfile
-        # - name: alpine
-        #   image: alpine
-        #   command:
-        #     - "/bin/sh"
-        #   args:
-        #     - "-c"
-        #     - "tail -f /dev/null"
-          # volumeMounts:
-            # - mountPath: /home/mount
-            #   name: myvolume
-            # - mountPath: /usr/share/nginx
-            #   name: aws-ebs
-      # volumes:
-      #   - name: configfile
-      #     configMap:
-      #       name: nginx
-            # items:
-            #   - key: config.conf
-            #     path: .
-        # - name: emptydemo
-        #   emptyDir: {}
-        # - name: aws-ebs
-        #   persistentVolumeClaim:
-        #     claimName: mypvc

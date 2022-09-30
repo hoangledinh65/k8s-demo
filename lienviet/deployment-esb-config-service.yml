@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: esb-config-service
+spec:
+  selector:
+    matchLabels:
+      app: esb-config-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: esb-config-service
+    spec:
+      containers:
+      - name: esb-config-service
+        image: asia-southeast1-docker.pkg.dev/lpb-poc/lpb-registry/middleware/esb-config-service@sha256:5b69d19b9454795a9593ec4cf58214c7b88213dd14d421caa6bd3ca90c29d4aa
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: esb-cm
+        resources:
+          requests:
+            memory: "150Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 18601
+
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: esb-config-service
+spec:
+  selector:
+    app: esb-config-service
+  ports:
+  - port: 18601
+    targetPort: 18601
+  #   name: configport
+  # type: LoadBalancer

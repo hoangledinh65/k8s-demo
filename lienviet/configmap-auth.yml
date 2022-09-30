@@ -1,0 +1,7 @@
+--- 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: esb-cm
+data:
+  EUREKA_REGISTRY_SERVICE: 'http://admin:123456@esb-registry-service:18001/eureka'

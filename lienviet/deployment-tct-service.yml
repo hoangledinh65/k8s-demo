@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tct-service
+spec:
+  selector:
+    matchLabels:
+      app: tct-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tct-service
+    spec:
+      containers:
+      - name: tct-service
+        image: asia-southeast1-docker.pkg.dev/lpb-poc/lpb-registry/middleware/tct-service:dev-1.0.0
+        envFrom:
+        - configMapRef:
+            name: esb-cm
+        resources:
+          requests:
+            memory: "150Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 19401
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: tct-service
+spec:
+  selector:
+    app: tct-service
+  ports:
+  - port: 19401
+    targetPort: 19401

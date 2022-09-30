@@ -13,53 +13,52 @@
 #   limitations under the License.
 
 ##################################################################################################
-# Sleep service
+# httpbin service
 ##################################################################################################
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: sleep
+  name: httpbin
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: sleep
+  name: httpbin
   labels:
-    app: sleep
-    service: sleep
+    app: httpbin
+    service: httpbin
 spec:
   ports:
-  - port: 80
-    name: http
+  - name: http
+    port: 8000
+    targetPort: 80
   selector:
-    app: sleep
+    app: httpbin
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sleep
+  name: httpbin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sleep
+      app: httpbin
+      version: v1
   template:
     metadata:
       labels:
-        app: sleep
+        app: httpbin
+        version: v1
     spec:
-      terminationGracePeriodSeconds: 0
-      serviceAccountName: sleep
+      serviceAccountName: httpbin
       containers:
-      - name: sleep
-        image: curlimages/curl
-        command: ["/bin/sleep", "infinity"]
+      - image: docker.io/kennethreitz/httpbin
         imagePullPolicy: IfNotPresent
-        volumeMounts:
-        - mountPath: /etc/sleep/tls
-          name: secret-volume
-      volumes:
-      - name: secret-volume
-        secret:
-          secretName: sleep-secret
-          optional: true
+        name: httpbin
+        ports:
+        - containerPort: 80
